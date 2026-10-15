@@ -18,7 +18,12 @@
       saved.storyRevision=2;
     }
     if (saved && Number.isInteger(saved.index) && saved.index >= 0 && saved.index < nodes.length) {
-      if(saved.epilogueRevision===2&&!saved.closingRevision&&saved.index===nodes.length-3)saved.index=nodes.length-1;
+      if(saved.epilogueRevision===2&&saved.closingRevision!==2){
+        const closingStart=nodes.findIndex(n=>n.scene==='epilogue');
+        if(!saved.closingRevision&&saved.index===closingStart+1)saved.index=nodes.length-1;
+        else if(saved.closingRevision===1&&saved.index>closingStart)saved.index=saved.index===closingStart+3?nodes.length-1:closingStart+3;
+        if(Array.isArray(saved.memories))saved.memories=saved.memories.filter(m=>Number(String(m.key).split(':')[0])<closingStart);
+      }
       state = {...defaults(), ...saved};
       state.unlocked = Math.max(0,Math.min(3,Number(state.unlocked)||0));
       state.dreamAnswers = Array.isArray(saved.dreamAnswers) ? saved.dreamAnswers.slice(0,2).filter((id,i)=>dreams[i].options.some(o=>o.id===id)) : [];
@@ -78,7 +83,7 @@
   }
   function save() {
     state.storyRevision=2;
-    state.closingRevision=1;
+    state.closingRevision=2;
     try {localStorage.setItem(SAVE_KEY, JSON.stringify(state));}
     catch (_) {document.querySelector('#save-state').textContent='本次进度暂未保存';}
   }
