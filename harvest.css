@@ -65,4 +65,4 @@
 .replay-chapter:hover{background:#e6e9d6;color:#344634}.drawer .replay-chapters{margin:0}.drawer .replay-chapter{background:#e7ecdf;color:#344634;border-color:#bbc8ae}
 @media(max-width:800px){.replay-chapters{gap:10px}.replay-chapter{font-size:16px;padding:14px 12px}.ending-buttons{flex-wrap:wrap}}
 .opening-screen .cover-title{margin:20px auto 28px;line-height:0;letter-spacing:0;width:min(620px,82vw)}
-.cover-title img{display:block;width:100%;height:auto;filter:drop-shadow(0 1px 2px #f5f3ebbb)}
+.cover-title img{display:block;width:100%;height:auto;filter:drop-shadow(0 2px 3px #1d3028a6) drop-shadow(0 6px 16px #17291f66)}
