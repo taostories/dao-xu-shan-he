@@ -18,6 +18,7 @@
       saved.storyRevision=2;
     }
     if (saved && Number.isInteger(saved.index) && saved.index >= 0 && saved.index < nodes.length) {
+      if(saved.epilogueRevision===2&&!saved.closingRevision&&saved.index===nodes.length-3)saved.index=nodes.length-1;
       state = {...defaults(), ...saved};
       state.unlocked = Math.max(0,Math.min(3,Number(state.unlocked)||0));
       state.dreamAnswers = Array.isArray(saved.dreamAnswers) ? saved.dreamAnswers.slice(0,2).filter((id,i)=>dreams[i].options.some(o=>o.id===id)) : [];
@@ -77,6 +78,7 @@
   }
   function save() {
     state.storyRevision=2;
+    state.closingRevision=1;
     try {localStorage.setItem(SAVE_KEY, JSON.stringify(state));}
     catch (_) {document.querySelector('#save-state').textContent='本次进度暂未保存';}
   }
@@ -144,13 +146,23 @@
     const nextScene=nodes.slice(state.index+1).map(n=>n.scene||chapters[n.chapter].scene).find(id=>id!==scene);
     prepareNextImages([...(node.chapter===2?['rice-normal','rice-special']:[]),!night?(portrait==='player'?'grandpa':'player'):null,nextScene,...(nextScene==='research'?['rice-normal','rice-special']:[])]);
   }
-  function advance() {
+  let closingTransition=false;
+  async function advance() {
+    if(closingTransition)return;
     const node=nodes[state.index];
     if(node.type==='game') {openGame(node.game);return;}
     if(node.type==='dream') {
       if(!state.dreamActive)return;
       state.dreamActive=null;
       if(state.dreamQuestion===0){state.dreamQuestion=1;renderStory();return;}
+    }
+    if(node.closing){
+      closingTransition=true;
+      const dialogue=app.querySelector('.dialogue');
+      const duration=matchMedia('(prefers-reduced-motion: reduce)').matches?0:650;
+      try{await dialogue.animate([{opacity:1},{opacity:0}],{duration,fill:'forwards'}).finished;}catch(_){}
+      closingTransition=false;
+      if(showingCover||nodes[state.index]!==node||!dialogue.isConnected)return;
     }
     state.index=Math.min(state.index+1,nodes.length-1);renderStory();
   }

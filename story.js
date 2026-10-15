@@ -72,7 +72,9 @@ window.RICE_STORY = (() => {
   say('李爷爷','田里的事，就是这样慢慢看明白的。粮食安全也是一样，种子要研究，土地要照顾，往后的难题，还得有人接着解。', {scene:'night'});
   say('你','我现在还说不清，自己以后能为农业做些什么。但我想先把今天没弄懂的事继续弄懂。下次再走进一片稻田，我不想只看它好不好看。', {scene:'night'});
   say('你','原来禾下乘凉梦，是一场未完的梦。前人种下稻种，我们继续守护山河稻香。', {scene:'night'});
-  say('李爷爷','禾下有梦，一梦两层。\n第一层，愿世间无饥馑，万家有饱饭；\n第二层，愿薪火永相传，青年续稻香。\n前人躬耕大地，种下希望的稻种；\n今日乡村振兴的路上，我们接过这份梦想，继续前行。\n稻香年年依旧，故事，还在继续。', {scene:'epilogue', panorama:true});
+  say('李爷爷','禾下有梦，一梦两层。\n第一层，愿世间无饥馑，万家有饱饭；\n第二层，愿薪火永相传，青年续稻香。\n前人躬耕大地，种下希望的稻种；\n今日乡村振兴的路上，我们接过这份梦想，继续前行。', {scene:'epilogue', panorama:true});
+  say('李爷爷','稻香年年依旧。', {scene:'epilogue', panorama:true});
+  say('李爷爷','故事，还在继续。', {scene:'epilogue', panorama:true, closing:true});
   nodes.push({chapter, type:'ending', scene:'epilogue'});
   const dreams = [
     {question:'走了这一趟，再想起禾下乘凉梦，你觉得最让人向往的是什么？', options:[
