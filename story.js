@@ -15,6 +15,7 @@ window.RICE_STORY = (() => {
     {id:'night', name:'星河与稻禾', file:'05-night.png', type:'scene', note:'16:9 横幅；你与李爷爷可直接画入最终全景'},
     {id:'epilogue', name:'尾声传承全景', file:'16-epilogue.png', type:'scene', note:'尾声最后一段与标题结尾；画稿铺满场景，静态展示'},
     {id:'grandpa', name:'李爷爷立绘', file:'06-grandpa.png', type:'portrait', note:'透明 PNG，建议 2:3；人物放在画面右侧，底部被对白框遮挡'},
+    {id:'player', name:'主控立绘', file:'07-player.png', type:'portrait', note:'透明 PNG；主控对白时显示在左侧'},
     {id:'rice-normal', name:'普通稻穗特写', file:'09-rice-normal.png', type:'rice', note:'1:1；绘出较饱满、黄色的花药，仅作观察示意'},
     {id:'rice-special', name:'目标稻穗特写', file:'10-rice-special.png', type:'rice', note:'1:1；绘出细瘦、色浅的花药，仅作观察示意'},
     {id:'bundle', name:'打谷稻束', file:'11-bundle.png', type:'prop', note:'透明 PNG；横向稻束，用于点击脱粒'},

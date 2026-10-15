@@ -66,3 +66,6 @@
 @media(max-width:800px){.replay-chapters{gap:10px}.replay-chapter{font-size:16px;padding:14px 12px}.ending-buttons{flex-wrap:wrap}}
 .opening-screen .cover-title{margin:20px auto 28px;line-height:0;letter-spacing:0;width:min(620px,82vw)}
 .cover-title img{display:block;width:100%;height:auto;filter:drop-shadow(0 2px 3px #1d3028a6) drop-shadow(0 6px 16px #17291f66)}
+.stage .character{height:calc(100% - 12px);max-height:620px;width:min(42vw,480px);bottom:-30px;right:9%;object-position:center bottom;filter:drop-shadow(0 5px 10px #23382a26)}
+.stage .character-player{left:9%;right:auto}
+@media(max-width:800px){.stage .character{width:min(78vw,340px);height:calc(100% + 8px);max-height:460px;right:3%;bottom:-25px}.stage .character-player{left:3%;right:auto}}
