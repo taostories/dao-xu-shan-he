@@ -72,7 +72,7 @@
   }
   function renderCover() {
     showingCover=true;
-    app.innerHTML=`<section class="ending opening-screen">${img('cover','scene-image','清晨稻田主页面')}<div class="ending-content"><h1>稻续山河</h1><p>一粒稻种，<br>一场未完的梦。</p><div class="ending-buttons"><button class="primary" id="start-button">${state.started?'继续故事':'走进稻乡'} <span aria-hidden="true">→</span></button>${state.started?'<button class="secondary" id="restart-cover">重新启程</button>':''}</div></div></section>`;
+    app.innerHTML=`<section class="ending opening-screen">${img('cover','scene-image','清晨稻田主页面')}<div class="ending-content"><h1 class="cover-title"><img src="assets/00-title.png" alt="稻续山河" width="1857" height="658"></h1><p>一粒稻种，<br>一场未完的梦。</p><div class="ending-buttons"><button class="primary" id="start-button">${state.started?'继续故事':'走进稻乡'}</button>${state.started?'<button class="secondary" id="restart-cover">重新启程</button>':''}</div></div></section>`;
     document.querySelector('#start-button').onclick=()=>{state.started=true;save();renderStory();};
     document.querySelector('#restart-cover')?.addEventListener('click',restartPrompt);
     if(state.finished){
