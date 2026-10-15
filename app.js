@@ -5,7 +5,7 @@
   const gameDialog = document.querySelector('#game-dialog');
   const drawer = document.querySelector('#drawer');
   const SAVE_KEY = 'daoxu-story-v1';
-  const defaults = () => ({index:0, unlocked:0, started:false, finished:false, results:{}, dreamAnswers:[], dreamQuestion:0, dreamRevision:1, dreamActive:null, memories:[], largeText:false, epilogueRevision:1});
+  const defaults = () => ({index:0, unlocked:0, started:false, finished:false, results:{}, dreamAnswers:[], dreamQuestion:0, dreamRevision:1, dreamActive:null, memories:[], largeText:false, epilogueRevision:2});
   let state = defaults(), showingCover = true, temporaryArt = new Map(), db;
   try {
     const saved = JSON.parse(localStorage.getItem(SAVE_KEY));
@@ -29,10 +29,10 @@
       state.memories = Array.isArray(state.memories) ? state.memories : [];
       state.results = state.results && typeof state.results === 'object' ? state.results : {};
       const epilogueStart=nodes.findIndex(n=>n.type==='dream')+1;
-      if(saved.epilogueRevision!==1){
+      if(saved.epilogueRevision!==2){
         if(state.index>=epilogueStart){state.index=epilogueStart;state.finished=false;state.dreamActive=null;}
         state.memories=state.memories.filter(m=>Number(String(m.key).split(':')[0])<epilogueStart);
-        state.epilogueRevision=1;
+        state.epilogueRevision=2;
       }
     }
   } catch (_) { /* Storage can be unavailable when opening local files. */ }
