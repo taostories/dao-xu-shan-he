@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const {chapters, nodes, art, dreams} = window.RICE_STORY;
+  const {chapters, nodes, art, dreams, legacyGrowthIndexMap} = window.RICE_STORY;
   const app = document.querySelector('#app');
   const gameDialog = document.querySelector('#game-dialog');
   const drawer = document.querySelector('#drawer');
@@ -9,6 +9,14 @@
   let state = defaults(), showingCover = true, temporaryArt = new Map(), db;
   try {
     const saved = JSON.parse(localStorage.getItem(SAVE_KEY));
+    if(saved&&saved.storyRevision!==2){
+      if(Number.isInteger(saved.index))saved.index=legacyGrowthIndexMap[saved.index]??saved.index;
+      if(Array.isArray(saved.memories))saved.memories=saved.memories.map(m=>{
+        const parts=String(m.key).split(':'),oldIndex=Number(parts.shift());
+        return {...m,key:legacyGrowthIndexMap[oldIndex]!==undefined?legacyGrowthIndexMap[oldIndex]+':'+parts.join(':'):m.key};
+      });
+      saved.storyRevision=2;
+    }
     if (saved && Number.isInteger(saved.index) && saved.index >= 0 && saved.index < nodes.length) {
       state = {...defaults(), ...saved};
       state.unlocked = Math.max(0,Math.min(3,Number(state.unlocked)||0));
@@ -49,6 +57,7 @@
     });
   }
   function save() {
+    state.storyRevision=2;
     try {localStorage.setItem(SAVE_KEY, JSON.stringify(state));}
     catch (_) {document.querySelector('#save-state').textContent='本次进度暂未保存';}
   }
@@ -73,6 +82,8 @@
     wireImages(app);
   }
   function currentText(node) {
+    if(node.dynamic==='harvest-reflection')return state.results.harvest?.lost>0?'刚才我只想着把杂屑扬干净，手一重，连谷子也扬出去了。以前说“别浪费粮食”，到了自己手上，才知道留下它也得有耐心。':'这一把谷子就得这么仔细，才能稳稳留下来。我以前只看见碗里的饭，还真没想过，前面有这么多道工夫。';
+    if(node.dynamic==='search-reflection')return state.results.search?.success?'找到的时候，我还挺高兴的。可这里只看了几株，真到了整片田里，得弯多少次腰、看多久，才能遇见这样一点不同啊。':'才看了这么几株，我就想赶紧知道答案了。他们却要在整片田里一株株找，找不到，第二天还得接着找。';
     if(node.dynamic==='search-result') return state.results.search?.success ? '好眼力！你留意到了花药的差别。当年，寻找特殊稻株需要这样的细心，更需要日复一日的耐心。一次发现背后，是许许多多次弯腰查看。' : '不容易吧？在大片稻田里找出细微的差别，就像大海捞针。机会用完了也没关系，你已经体会到观察需要多大的耐心。科研人员的寻找，还要一天一天继续。';
     return node.text || '';
   }
