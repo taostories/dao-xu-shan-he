@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#eff0e8">
+  <title>稻续山河 · 田间研学互动故事</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="harvest.css">
+  <link rel="stylesheet" href="water-watch.css">
+  <script src="story.js" defer></script>
+  <script src="harvest.js" defer></script>
+  <script src="water-watch.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" id="home-link" aria-label="返回封面"><span class="brand-mark">稻</span><span>稻续山河</span></a>
+    <div class="top-actions"><span class="sr-only" id="save-state" role="status"></span><button class="text-button" id="log-button">沿途记忆</button><button class="text-button" id="art-button">接入画稿 <span aria-hidden="true">↗</span></button><button class="icon-button" id="menu-button" aria-label="打开设置">☰</button></div>
+  </header>
+  <main id="app"></main>
+  <dialog id="game-dialog" class="game-dialog" aria-labelledby="game-title"></dialog>
+  <dialog id="drawer" class="drawer" aria-labelledby="drawer-title"></dialog>
+  <div class="toast" id="toast" role="status"></div>
+  <noscript>请开启浏览器 JavaScript，以体验剧情与小游戏。</noscript>
+</body>
+</html>
