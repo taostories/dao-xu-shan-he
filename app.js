@@ -91,15 +91,15 @@
   }
   function renderCover() {
     showingCover=true;
-    app.innerHTML=`<section class="ending opening-screen">${img('cover','scene-image','清晨稻田主页面')}<div class="ending-content"><h1 class="cover-title"><img src="assets/00-title.webp" alt="稻续山河" width="1857" height="658"></h1><p>一粒稻种，<br>一场未完的梦。</p><div class="ending-buttons"><button class="primary" id="start-button">${state.started?'继续故事':'走进稻乡'}</button>${state.started?'<button class="secondary" id="restart-cover">重新启程</button>':''}</div></div></section>`;
-    document.querySelector('#start-button').onclick=()=>{state.started=true;save();renderStory();};
+    const inProgress=state.started&&!state.finished;
+    app.innerHTML=`<section class="ending opening-screen">${img('cover','scene-image','清晨稻田主页面')}<div class="ending-content"><h1 class="cover-title"><img src="assets/00-title.webp" alt="稻续山河" width="1857" height="658"></h1><p>一粒稻种，<br>一场未完的梦。</p><div class="ending-buttons"><button class="primary" id="start-button">${inProgress?'继续故事':'走进稻乡'}</button>${inProgress?'<button class="secondary" id="restart-cover">重新启程</button>':''}</div></div></section>`;
+    document.querySelector('#start-button').onclick=()=>{
+      if(state.finished)state={...defaults(),largeText:state.largeText,hasCompleted:true};
+      state.started=true;save();renderStory();
+    };
     document.querySelector('#restart-cover')?.addEventListener('click',restartPrompt);
-    if(state.finished){
-      app.querySelector('.ending-buttons').innerHTML='<button class="primary" id="cover-chapters">回望沿途记忆</button><button class="secondary" id="restart-cover">重新启程</button>';
-      document.querySelector('#cover-chapters').onclick=showChapters;document.querySelector('#restart-cover').onclick=restartPrompt;
-    }else if(state.hasCompleted){app.querySelector('.ending-buttons').insertAdjacentHTML('beforeend','<button class="secondary" id="cover-chapters">选择章节</button>');document.querySelector('#cover-chapters').onclick=showChapters;}
     wireImages(app);
-    const resume=nodes[state.index];
+    const resume=nodes[state.finished?0:state.index];
     prepareNextImages([resume.scene||chapters[resume.chapter].scene,...(resume.chapter===2?['rice-normal','rice-special']:[]),'grandpa','player']);
   }
   function currentText(node) {
@@ -157,7 +157,7 @@
   function renderEnding() {
     ++warmRevision;
     showingCover=false;state.finished=true;state.hasCompleted=true;save();
-    app.innerHTML=`<section class="ending finale">${img('epilogue','scene-image','星河稻田中的老人和青年')}<div class="ending-content"><h1>稻续山河</h1><p>前人种下稻种，<br>我们继续守护山河稻香。</p><div class="ending-buttons"><button class="primary" id="ending-memory">回望沿途记忆</button><button class="secondary" id="ending-home">回到主页面</button></div></div></section>`;
+    app.innerHTML=`<section class="ending finale">${img('epilogue','scene-image','星河稻田中的老人和青年')}<div class="ending-content"><h1 class="cover-title"><img src="assets/00-title.webp" alt="稻续山河" width="1857" height="658"></h1><p>前人种下稻种，<br>我们继续守护山河稻香。</p><div class="ending-buttons"><button class="primary" id="ending-memory">回望沿途记忆</button><button class="secondary" id="ending-home">回到主页面</button></div></div></section>`;
     document.querySelector('#ending-memory').onclick=showChapters;
     document.querySelector('#ending-home').onclick=renderCover;
     wireImages(app);
