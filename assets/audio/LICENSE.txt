@@ -1,0 +1,10 @@
+Track: Peaceful Tune 2
+Creator: Tozan
+Source: https://opengameart.org/content/peaceful-tune-2
+Original recording: https://opengameart.org/sites/default/files/peaceful2_0.ogg
+License: CC0 1.0 Universal
+License text: https://creativecommons.org/publicdomain/zero/1.0/
+Verified on 2026-10-15: the author labels the work CC0, attribution optional.
+
+Web adaptation: MP3 encoding at 64 kbps, +10 dB gain, gentle fade-in and
+fade-out for looping. Original OGG retained. No other music is included.
