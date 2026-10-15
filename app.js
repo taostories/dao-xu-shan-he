@@ -292,7 +292,7 @@
   }
   document.querySelector('#home-link').onclick=e=>{e.preventDefault();renderCover();};
   document.querySelector('#log-button').onclick=showMemories;
-  document.querySelector('#art-button').onclick=showArt;
+
   document.querySelector('#menu-button').onclick=showSettings;
   document.addEventListener('keydown',e=>{
     if(e.code==='Space'&&!e.repeat&&!showingCover&&!drawer.open&&!gameDialog.open&&!['INPUT','BUTTON','TEXTAREA','SELECT','A'].includes(document.activeElement.tagName)) {
