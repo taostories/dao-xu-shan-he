@@ -7,22 +7,22 @@ window.RICE_STORY = (() => {
     {name:'梦起稻田', subtitle:'禾下乘凉，初心如愿', label:'第三章', scene:'dusk', time:'黄昏', place:'巨型稻片区 · 稻禾之下'}
   ];
   const art = [
-    {id:'cover', name:'主页面清晨稻田', file:'00-cover.png', type:'scene', note:'16:9 横幅；主页面独立背景'},
-    {id:'field', name:'清晨稻田', file:'01-field.png', type:'scene', note:'16:9 横幅；田埂向前延伸，底部留出对白空间'},
-    {id:'old', name:'老田埂', file:'02-old-field.png', type:'scene', note:'16:9 横幅；现实田间，旧照、锄头、竹篮可画入场景'},
-    {id:'research', name:'试验田', file:'03-research.png', type:'scene', note:'16:9 横幅；当下的水田，不出现过去人物'},
-    {id:'dusk', name:'黄昏巨型稻', file:'04-dusk.png', type:'scene', note:'16:9 横幅；高大稻禾，右侧可留人物位置'},
-    {id:'night', name:'星河与稻禾', file:'05-night.png', type:'scene', note:'16:9 横幅；你与李爷爷可直接画入最终全景'},
-    {id:'epilogue', name:'尾声传承全景', file:'16-epilogue.png', type:'scene', note:'尾声最后一段与标题结尾；画稿铺满场景，静态展示'},
-    {id:'grandpa', name:'李爷爷立绘', file:'06-grandpa.png', type:'portrait', note:'透明 PNG，建议 2:3；人物放在画面右侧，底部被对白框遮挡'},
-    {id:'player', name:'主控立绘', file:'07-player.png', type:'portrait', note:'透明 PNG；主控对白时显示在左侧'},
-    {id:'rice-normal', name:'普通稻穗特写', file:'09-rice-normal.png', type:'rice', note:'1:1；绘出较饱满、黄色的花药，仅作观察示意'},
-    {id:'rice-special', name:'目标稻穗特写', file:'10-rice-special.png', type:'rice', note:'1:1；绘出细瘦、色浅的花药，仅作观察示意'},
-    {id:'bundle', name:'打谷稻束', file:'11-bundle.png', type:'prop', note:'透明 PNG；横向稻束，用于点击脱粒'},
-    {id:'tray', name:'扬谷竹匾', file:'12-tray.png', type:'prop', note:'透明 PNG；俯视竹匾，拖动时整体移动'},
-    {id:'grain', name:'脱粒稻谷', file:'13-grain.png', type:'prop', note:'透明 PNG；一小堆稻谷，叠放在竹匾中'},
-    {id:'chaff', name:'谷中杂屑', file:'14-chaff.png', type:'prop', note:'透明 PNG；零散轻杂屑，扬谷时逐渐淡出'},
-    {id:'scale', name:'称粮秤', file:'15-scale.png', type:'prop', note:'透明 PNG；完整秤与空秤盘，放在称重区'},
+    {id:'cover', name:'主页面清晨稻田', file:'00-cover.webp', type:'scene', note:'16:9 横幅；主页面独立背景'},
+    {id:'field', name:'清晨稻田', file:'01-field.webp', type:'scene', note:'16:9 横幅；田埂向前延伸，底部留出对白空间'},
+    {id:'old', name:'老田埂', file:'02-old-field.webp', type:'scene', note:'16:9 横幅；现实田间，旧照、锄头、竹篮可画入场景'},
+    {id:'research', name:'试验田', file:'03-research.webp', type:'scene', note:'16:9 横幅；当下的水田，不出现过去人物'},
+    {id:'dusk', name:'黄昏巨型稻', file:'04-dusk.webp', type:'scene', note:'16:9 横幅；高大稻禾，右侧可留人物位置'},
+    {id:'night', name:'星河与稻禾', file:'05-night.webp', type:'scene', note:'16:9 横幅；你与李爷爷可直接画入最终全景'},
+    {id:'epilogue', name:'尾声传承全景', file:'16-epilogue.webp', type:'scene', note:'尾声最后一段与标题结尾；画稿铺满场景，静态展示'},
+    {id:'grandpa', name:'李爷爷立绘', file:'06-grandpa.webp', type:'portrait', note:'透明 PNG，建议 2:3；人物放在画面右侧，底部被对白框遮挡'},
+    {id:'player', name:'主控立绘', file:'07-player.webp', type:'portrait', note:'透明 PNG；主控对白时显示在左侧'},
+    {id:'rice-normal', name:'普通稻穗特写', file:'09-rice-normal.webp', type:'rice', note:'1:1；绘出较饱满、黄色的花药，仅作观察示意'},
+    {id:'rice-special', name:'目标稻穗特写', file:'10-rice-special.webp', type:'rice', note:'1:1；绘出细瘦、色浅的花药，仅作观察示意'},
+    {id:'bundle', name:'打谷稻束', file:'11-bundle.webp', type:'prop', note:'透明 PNG；横向稻束，用于点击脱粒'},
+    {id:'tray', name:'扬谷竹匾', file:'12-tray.webp', type:'prop', note:'透明 PNG；俯视竹匾，拖动时整体移动'},
+    {id:'grain', name:'脱粒稻谷', file:'13-grain.webp', type:'prop', note:'透明 PNG；一小堆稻谷，叠放在竹匾中'},
+    {id:'chaff', name:'谷中杂屑', file:'14-chaff.webp', type:'prop', note:'透明 PNG；零散轻杂屑，扬谷时逐渐淡出'},
+    {id:'scale', name:'称粮秤', file:'15-scale.webp', type:'prop', note:'透明 PNG；完整秤与空秤盘，放在称重区'},
   ];
   const nodes = [];
   let chapter = 0;
