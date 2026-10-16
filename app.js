@@ -174,7 +174,7 @@
   function renderEnding() {
     ++warmRevision;
     showingCover=false;state.finished=true;state.hasCompleted=true;save();
-    app.innerHTML=`<section class="ending finale">${img('epilogue','scene-image','星河稻田中的老人和青年')}<div class="ending-content"><h1 class="cover-title"><img src="assets/00-title.webp" alt="稻续山河" width="1857" height="658"></h1><p>前人种下稻种，<br>我们继续守护山河稻香。</p><div class="ending-buttons"><button class="primary" id="ending-memory">回望沿途记忆</button><button class="secondary" id="ending-home">回到主页面</button></div></div></section>`;
+    app.innerHTML=`<section class="ending finale">${img('epilogue','scene-image','主控想象中，星河稻浪连接前人的耕耘与青年的脚步')}<div class="ending-content"><h1 class="cover-title"><img src="assets/00-title.webp" alt="稻续山河" width="1857" height="658"></h1><p>前人种下稻种，<br>我们继续守护山河稻香。</p><div class="ending-buttons"><button class="primary" id="ending-memory">回望沿途记忆</button><button class="secondary" id="ending-home">回到主页面</button></div></div></section>`;
     document.querySelector('#ending-memory').onclick=showChapters;
     document.querySelector('#ending-home').onclick=renderCover;
     wireImages(app);
@@ -266,7 +266,7 @@
     drawer.querySelector('#confirm-restart').onclick=()=>{const largeText=state.largeText;state=defaults();state.largeText=largeText;state.started=true;save();drawer.close();renderStory();};
   }
   function showSettings() {
-    showDrawer('旅途设置',`<div class="setting-row"><div><h3>较大对白文字</h3><p>让阅读更轻松</p></div><input type="checkbox" id="large-text" aria-label="较大对白文字" ${state.largeText?'checked':''}></div><div class="setting-row"><div><h3>重新启程</h3><p>从清晨田埂开始，画稿会保留</p></div><button class="secondary" id="restart-settings">重置进度</button></div><div class="setting-row"><div><h3>返回封面</h3><p>保留当前进度</p></div><button class="secondary" id="back-cover">返回</button></div><p class="notice">操作：点击按钮推进对白，也可使用空格键。小游戏与选择题需要完成相应交互。进度保存在当前浏览器；清理网站数据会删除存档。<br><br>本作人物与具体村庄经历为虚构；仅出场你与老年李爷爷。袁先生的故事由李爷爷讲述，不设置穿越、画外音或手稿交互。两层梦是本作的主题理解，不是对原话的逐字引用。所有画面由创作者提供。</p>`);
+    showDrawer('旅途设置',`<div class="setting-row"><div><h3>较大对白文字</h3><p>让阅读更轻松</p></div><input type="checkbox" id="large-text" aria-label="较大对白文字" ${state.largeText?'checked':''}></div><div class="setting-row"><div><h3>重新启程</h3><p>从清晨田埂开始，画稿会保留</p></div><button class="secondary" id="restart-settings">重置进度</button></div><div class="setting-row"><div><h3>返回封面</h3><p>保留当前进度</p></div><button class="secondary" id="back-cover">返回</button></div><p class="notice">操作：点击按钮推进对白，也可使用空格键。小游戏与选择题需要完成相应交互。进度保存在当前浏览器；清理网站数据会删除存档。<br><br>本作以湖南洪江市安江镇为地域背景。李爷爷、田间探访和村民往事为虚构叙事，并非真实村民口述；袁隆平在安江工作、生活与科研的背景依据公开资料。插画为艺术化表达，末尾全景是主控对禾下乘凉梦与代际传承的想象，不代表当地实有景点。两层梦是本作的主题理解，不是对原话的逐字引用。<br><a href="https://www.hjs.gov.cn/hjs/c106462/202501/a259e78c3fac4a0fb5f4238220599e4c.shtml" target="_blank" rel="noopener noreferrer">安江科研背景资料 · 洪江市人民政府</a></p>`);
     drawer.querySelector('#large-text').onchange=e=>{state.largeText=e.target.checked;document.body.classList.toggle('large-text',state.largeText);save();};
     drawer.querySelector('#restart-settings').onclick=restartPrompt;
     drawer.querySelector('#back-cover').onclick=()=>{drawer.close();renderCover();};
