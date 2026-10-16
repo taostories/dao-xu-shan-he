@@ -1,12 +1,12 @@
 (() => {
   'use strict';
-  const {chapters, nodes, art, dreams, legacyGrowthIndexMap} = window.RICE_STORY;
+  const {chapters, nodes, art, legacyGrowthIndexMap} = window.RICE_STORY;
   const app = document.querySelector('#app');
   const gameDialog = document.querySelector('#game-dialog');
   const drawer = document.querySelector('#drawer');
   const SAVE_KEY = 'daoxu-story-v1';
-  const defaults = () => ({index:0, unlocked:0, started:false, finished:false, results:{}, dreamAnswers:[], dreamQuestion:0, dreamRevision:1, dreamActive:null, memories:[], largeText:false, epilogueRevision:2});
-  let state = defaults(), showingCover = true, temporaryArt = new Map(), db;
+  const defaults = () => ({index:0, unlocked:0, started:false, finished:false, results:{}, dreamExploration:null, dreamRevision:2, memories:[], largeText:false, epilogueRevision:2});
+  let state = defaults(), showingCover = true, temporaryArt = new Map(), db, dreamCleanup=null;
   try {
     const saved = JSON.parse(localStorage.getItem(SAVE_KEY));
     if(saved&&saved.storyRevision!==2){
@@ -26,17 +26,18 @@
       }
       state = {...defaults(), ...saved};
       state.unlocked = Math.max(0,Math.min(3,Number(state.unlocked)||0));
-      state.dreamAnswers = Array.isArray(saved.dreamAnswers) ? saved.dreamAnswers.slice(0,2).filter((id,i)=>dreams[i].options.some(o=>o.id===id)) : [];
-      state.dreamQuestion = state.dreamAnswers.length===2 ? 1 : 0;
-      if(saved.dreamQuestion===1&&state.dreamAnswers.length>=1)state.dreamQuestion=1;
-      state.dreamActive = dreams[state.dreamQuestion].options.some(o=>o.id===saved.dreamActive)&&state.dreamAnswers[state.dreamQuestion]===saved.dreamActive ? saved.dreamActive : null;
-      if(saved.dreamRevision!==1){state.dreamAnswers=[];state.dreamQuestion=0;state.dreamActive=null;state.dreamRevision=1;state.memories=Array.isArray(saved.memories)?saved.memories.filter(m=>Number(String(m.key).split(':')[0])!==nodes.findIndex(n=>n.type==='dream')):[];}
+      state.dreamExploration=window.RiceDream.normalize(saved.dreamExploration);
+      if(saved.dreamRevision!==2){
+        state.memories=Array.isArray(saved.memories)?saved.memories.filter(m=>Number(String(m.key).split(':')[0])!==nodes.findIndex(n=>n.type==='dream')):[];
+      }
+      state.dreamRevision=2;
+      delete state.dreamAnswers;delete state.dreamQuestion;delete state.dreamActive;
 
       state.memories = Array.isArray(state.memories) ? state.memories : [];
       state.results = state.results && typeof state.results === 'object' ? state.results : {};
       const epilogueStart=nodes.findIndex(n=>n.type==='dream')+1;
       if(saved.epilogueRevision!==2){
-        if(state.index>=epilogueStart){state.index=epilogueStart;state.finished=false;state.dreamActive=null;}
+        if(state.index>=epilogueStart){state.index=epilogueStart;state.finished=false;}
         state.memories=state.memories.filter(m=>Number(String(m.key).split(':')[0])<epilogueStart);
         state.epilogueRevision=2;
       }
@@ -97,6 +98,7 @@
     if (!state.memories.some(m=>m.key===key)) state.memories.push({key,who,text,chapter:nodes[state.index].chapter});
   }
   function renderCover() {
+    dreamCleanup?.();dreamCleanup=null;
     showingCover=true;
     const inProgress=state.started&&!state.finished;
     app.innerHTML=`<section class="ending opening-screen">${img('cover','scene-image','清晨稻田主页面')}<div class="ending-content"><h1 class="cover-title"><img src="assets/00-title.webp" alt="稻续山河" width="1857" height="658"></h1><p>一粒稻种，<br>一场未完的梦。</p><div class="ending-buttons"><button class="primary" id="start-button">${inProgress?'继续故事':'走进稻乡'}</button>${inProgress?'<button class="secondary" id="restart-cover">重新启程</button>':''}</div></div></section>`;
@@ -116,6 +118,7 @@
     return node.text || '';
   }
   function renderStory() {
+    dreamCleanup?.();dreamCleanup=null;
     showingCover=false;
     const node=nodes[state.index], c=chapters[node.chapter];
     state.unlocked=Math.max(state.unlocked,node.chapter);
@@ -123,30 +126,19 @@
     if(node.type==='ending') {renderEnding();return;}
     const scene=node.scene||c.scene;
     const night=scene==='night'||scene==='epilogue';
-    let text=currentText(node), who=node.who, choices='', action='点击继续';
+    let text=currentText(node), who=node.who, action='点击继续';
     if(node.type==='walk'){action=node.label;}
     if(node.type==='game'){action='开始田间体验';}
     if(node.type==='dream') {
-      const question=dreams[state.dreamQuestion];
-      who='李爷爷';
-      if(state.dreamActive){text=question.options.find(o=>o.id===state.dreamActive).text;}
-      else {
-        text=question.question;
-        choices=`<div class="dream-options">${question.options.map(o=>`<button class="dream-option" data-dream="${o.id}">${esc(o.label)}</button>`).join('')}</div>`;
-        action='';
-      }
+      state.dreamExploration=window.RiceDream.normalize(state.dreamExploration);save();
+      dreamCleanup=window.RiceDream.mount({root:app,progress:state.dreamExploration,save,img,wireImages,remember,finish:advance});
+      prepareNextImages(['night','epilogue']);return;
     }
     const portrait = !node.opening && !node.panorama && !night && node.type !== 'walk' ? (who === '你' ? 'player' : who === '李爷爷' ? 'grandpa' : null) : null;
     remember(who,text);save();
     const within=nodes.filter(n=>n.chapter===node.chapter), position=within.indexOf(node)+1;
-    app.innerHTML=`<section class="story-shell ${night?'night':''} ${node.type==='dream'?'dream-mode':''} ${node.panorama?'panorama':''}">${img(scene,'scene-image','')}<div class="scene-shade"></div><div class="stage">${portrait?img(portrait,'character character-'+portrait,who):''}</div><section class="dialogue ${node.type==='walk'?'scene-caption':''}" aria-label="${node.type==='walk'?'场景描写':'剧情对白'}">${who?`<div class="speaker">${who}</div>`:''}<div class="dialogue-main">${state.dreamActive&&node.type==='dream'?choices:''}<p class="dialogue-text" aria-live="polite">${esc(text)}</p>${!state.dreamActive&&node.type==='dream'?choices:''}<div class="dialogue-foot">${action?`<button class="next-button" id="next-button">${action}<span aria-hidden="true">→</span></button>`:''}</div></div></section><div class="chapter-progress" role="progressbar" aria-label="本章进度" aria-valuenow="${position}" aria-valuemin="0" aria-valuemax="${within.length}"><span style="width:${position/within.length*100}%"></span></div></section>`;
+    app.innerHTML=`<section class="story-shell ${night?'night':''} ${node.panorama?'panorama':''}">${img(scene,'scene-image','')}<div class="scene-shade"></div><div class="stage">${portrait?img(portrait,'character character-'+portrait,who):''}</div><section class="dialogue ${node.type==='walk'?'scene-caption':''}" aria-label="${node.type==='walk'?'场景描写':'剧情对白'}">${who?`<div class="speaker">${who}</div>`:''}<div class="dialogue-main"><p class="dialogue-text" aria-live="polite">${esc(text)}</p><div class="dialogue-foot">${action?`<button class="next-button" id="next-button">${action}<span aria-hidden="true">→</span></button>`:''}</div></div></section><div class="chapter-progress" role="progressbar" aria-label="本章进度" aria-valuenow="${position}" aria-valuemin="0" aria-valuemax="${within.length}"><span style="width:${position/within.length*100}%"></span></div></section>`;
     document.querySelector('#next-button')?.addEventListener('click',advance);
-    app.querySelectorAll('[data-dream]').forEach(b=>b.onclick=()=>{
-      if(state.dreamActive)return;
-      const option=dreams[state.dreamQuestion].options.find(o=>o.id===b.dataset.dream);
-      if(!option)return;
-      remember('你',option.label);state.dreamActive=option.id;state.dreamAnswers[state.dreamQuestion]=option.id;renderStory();
-    });
     wireImages(app);
     const nextScene=nodes.slice(state.index+1).map(n=>n.scene||chapters[n.chapter].scene).find(id=>id!==scene);
     prepareNextImages([...(node.chapter===2?['rice-normal','rice-special']:[]),!night?(portrait==='player'?'grandpa':'player'):null,nextScene,...(nextScene==='research'?['rice-normal','rice-special']:[])]);
@@ -156,11 +148,7 @@
     if(closingTransition)return;
     const node=nodes[state.index];
     if(node.type==='game') {openGame(node.game);return;}
-    if(node.type==='dream') {
-      if(!state.dreamActive)return;
-      state.dreamActive=null;
-      if(state.dreamQuestion===0){state.dreamQuestion=1;renderStory();return;}
-    }
+    if(node.type==='dream'&&!state.dreamExploration?.merged)return;
     if(node.closing){
       closingTransition=true;
       const dialogue=app.querySelector('.dialogue');
@@ -188,7 +176,7 @@
       state.index=nodes.findIndex(n=>n.chapter===chapter);state.started=true;state.finished=false;
       const keys=[['harvest','yield'],['waterWatch','fieldRescue','weather'],['search']];
       keys.forEach((list,i)=>{if(i>=chapter)list.forEach(key=>delete state.results[key]);});
-      state.dreamAnswers=[];state.dreamQuestion=0;state.dreamActive=null;
+      state.dreamExploration=null;
       if(drawer.open)drawer.close();save();renderStory();
     });
   }
@@ -266,7 +254,7 @@
     drawer.querySelector('#confirm-restart').onclick=()=>{const largeText=state.largeText;state=defaults();state.largeText=largeText;state.started=true;save();drawer.close();renderStory();};
   }
   function showSettings() {
-    showDrawer('旅途设置',`<div class="setting-row"><div><h3>较大对白文字</h3><p>让阅读更轻松</p></div><input type="checkbox" id="large-text" aria-label="较大对白文字" ${state.largeText?'checked':''}></div><div class="setting-row"><div><h3>重新启程</h3><p>从清晨田埂开始，画稿会保留</p></div><button class="secondary" id="restart-settings">重置进度</button></div><div class="setting-row"><div><h3>返回封面</h3><p>保留当前进度</p></div><button class="secondary" id="back-cover">返回</button></div><p class="notice">操作：点击按钮推进对白，也可使用空格键。小游戏与选择题需要完成相应交互。进度保存在当前浏览器；清理网站数据会删除存档。<br><br>本作以湖南洪江市安江镇为地域背景。李爷爷、田间探访和村民往事为虚构叙事，并非真实村民口述；袁隆平在安江工作、生活与科研的背景依据公开资料。插画为艺术化表达，末尾全景是主控对禾下乘凉梦与代际传承的想象，不代表当地实有景点。两层梦是本作的主题理解，不是对原话的逐字引用。<br><a href="https://www.hjs.gov.cn/hjs/c106462/202501/a259e78c3fac4a0fb5f4238220599e4c.shtml" target="_blank" rel="noopener noreferrer">安江科研背景资料 · 洪江市人民政府</a></p>`);
+    showDrawer('旅途设置',`<div class="setting-row"><div><h3>较大对白文字</h3><p>让阅读更轻松</p></div><input type="checkbox" id="large-text" aria-label="较大对白文字" ${state.largeText?'checked':''}></div><div class="setting-row"><div><h3>重新启程</h3><p>从清晨田埂开始，画稿会保留</p></div><button class="secondary" id="restart-settings">重置进度</button></div><div class="setting-row"><div><h3>返回封面</h3><p>保留当前进度</p></div><button class="secondary" id="back-cover">返回</button></div><p class="notice">操作：点击按钮推进对白，也可使用空格键。小游戏与两层梦探索需要完成相应交互。两层梦可拖动分界线，键盘聚焦分界线后用方向键移动。进度保存在当前浏览器；清理网站数据会删除存档。<br><br>本作以湖南洪江市安江镇为地域背景。李爷爷、田间探访和村民往事为虚构叙事，并非真实村民口述；袁隆平在安江工作、生活与科研的背景依据公开资料。插画为艺术化表达，末尾全景是主控对禾下乘凉梦与代际传承的想象，不代表当地实有景点。两层梦是本作的主题理解，不是对原话的逐字引用。<br><a href="https://www.hjs.gov.cn/hjs/c106462/202501/a259e78c3fac4a0fb5f4238220599e4c.shtml" target="_blank" rel="noopener noreferrer">安江科研背景资料 · 洪江市人民政府</a></p>`);
     drawer.querySelector('#large-text').onchange=e=>{state.largeText=e.target.checked;document.body.classList.toggle('large-text',state.largeText);save();};
     drawer.querySelector('#restart-settings').onclick=restartPrompt;
     drawer.querySelector('#back-cover').onclick=()=>{drawer.close();renderCover();};

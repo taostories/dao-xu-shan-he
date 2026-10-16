@@ -1,0 +1,35 @@
+.dream-experience{--dream-split:50%;position:relative;isolation:isolate;min-height:calc(100svh - 86px);display:flex;flex-direction:column;background:#384736;color:#fff7dd;overflow:hidden}
+.dream-experience>.scene-image{z-index:-2}.dream-experience:before{content:"";position:absolute;inset:0;background:linear-gradient(#233a3166,transparent 65%,#233a3177);z-index:-1}
+.dream-surface{position:relative;min-height:440px;flex:1;touch-action:pan-y}
+.dream-layer{position:absolute;inset:0;pointer-events:none;transition:opacity 1s}
+.dream-layer-first{background:linear-gradient(90deg,#b77a183b,transparent);clip-path:inset(0 calc(100% - var(--dream-split)) 0 0)}
+.dream-layer-second{background:linear-gradient(270deg,#294e4933,transparent);clip-path:inset(0 0 0 var(--dream-split))}
+.dream-grain{position:absolute;width:22%;height:40%;object-fit:contain;left:12%;bottom:35px;filter:drop-shadow(0 10px 20px #25332255)}
+.dream-player{position:absolute;width:25%;height:70%;object-fit:contain;object-position:bottom;right:10%;bottom:0}
+.dream-readings{position:relative;display:flex;justify-content:space-between;gap:24px;margin:25px 5%;pointer-events:none}
+.dream-reading{width:260px;max-width:44%;padding:18px 22px;background:#253c30dc;box-shadow:0 4px 30px #15241e22;border:1px solid #eadfb33b;border-radius:5px;pointer-events:auto}
+.dream-reading h2{font:18px var(--serif);letter-spacing:2px;margin:0 0 16px;color:#e6ce91}.dream-reading h2 span{display:block;font-size:25px;letter-spacing:1px;color:#fff7dd;margin-top:9px}
+.dream-reading ul{list-style:none;padding:0;margin:0;display:grid;gap:3px}.dream-reading button{font-size:17px;min-height:34px;padding:4px 0;text-align:left;color:#fff7dd;border:0;background:none;width:100%}.dream-reading button:disabled{opacity:.58;cursor:default;font-size:14px;letter-spacing:3px}.dream-reading button.selected{color:#ffdb89;text-decoration:underline;text-underline-offset:5px}
+.dream-controls{position:absolute;inset:0;pointer-events:none;transition:opacity 1s}
+.dream-track{position:absolute;left:0;right:0;bottom:36px;height:1px;background:#fff4c366}
+.dream-stop{position:absolute;top:0;width:13px;height:13px;border:2px solid #fff1c1;border-radius:50%;background:#50604c;transform:translate(-50%,-50%);box-shadow:0 0 12px #ffeb9e44}
+.dream-stop.near{box-shadow:0 0 0 7px #fff4c32a,0 0 25px #ffe19e}.dream-stop.found{background:#ffe3a2;box-shadow:0 0 12px #ffe7ab}
+.dream-stop.dwelling:after{content:"";position:absolute;inset:-7px;border:2px solid #fff3c8;border-radius:50%;animation:dream-dwell .7s linear forwards}
+.dream-divider{position:absolute;top:10px;bottom:12px;left:var(--dream-split);width:1px;background:linear-gradient(transparent,#fff8d9 25%,#fff8d9);filter:drop-shadow(0 0 4px #192e23);transform:translateX(-50%)}
+.dream-handle{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:49px;height:49px;border:1px solid #f9e5ae;border-radius:50%;color:#fff1c6;background:#314c3c;pointer-events:auto;touch-action:none;cursor:ew-resize;user-select:none;font:28px Georgia,serif;letter-spacing:3px;box-shadow:0 3px 16px #1a332955}
+.dream-handle:active{background:#6c713e}.dream-caption{position:relative;margin:0 max(4vw,20px) 24px;padding:16px 28px 12px;border:1px solid #fff7dd;border-radius:4px;background:#fbfaf5f5;color:var(--ink);min-height:202px}
+#dream-instruction{margin:0 0 13px;color:#687348;font-size:14px;line-height:1.7}.dream-speech{display:flex;gap:26px}.dream-speaker{font:23px var(--serif);flex-shrink:0;padding-top:4px}.dream-speech p{font-size:21px;line-height:1.85;margin:0;min-height:78px}.dream-actions{display:flex;justify-content:flex-end;min-height:40px;margin-top:8px}.dream-actions .primary{min-height:40px;padding:8px 18px}.dream-actions .next-button{font-size:16px}.dream-merged .dream-controls,.dream-merged .dream-layer{opacity:0;pointer-events:none}.dream-merged .dream-handle{pointer-events:none}.dream-merged .dream-reading{background:#253c30b5}.dream-merged .dream-speech p{font-family:var(--serif);font-size:25px;align-content:center}.large-text .dream-speech p{font-size:25px}
+@keyframes dream-dwell{from{transform:scale(1.6);opacity:.2}to{transform:scale(1);opacity:1}}
+@media(min-width:1600px){.dream-caption{margin-left:10vw;margin-right:10vw}.dream-surface{min-height:500px}}
+@media(max-width:800px){.dream-experience{min-height:calc(100svh - 72px)}.dream-surface{min-height:390px}.dream-readings{margin:18px 4%;gap:14px}.dream-reading{max-width:none;width:47%;padding:14px 12px}.dream-reading h2{font-size:15px;letter-spacing:1px;margin-bottom:12px}.dream-reading h2 span{font-size:20px}.dream-reading button{font-size:15px;min-height:34px}.dream-grain{width:32%;height:30%;left:8%;bottom:36px}.dream-player{width:37%;height:48%;right:6%}.dream-caption{margin:0 4vw 18px;padding:14px 18px 10px;min-height:225px}.dream-speech{display:block}.dream-speaker{font-size:21px;display:block;margin-bottom:9px}.dream-speech p{font-size:19px;line-height:1.75;min-height:100px}#dream-instruction{font-size:13px;margin-bottom:12px}.dream-merged .dream-speech p{font-size:22px}.large-text .dream-speech p{font-size:22px}}
+@media(prefers-reduced-motion:reduce){.dream-layer,.dream-controls{transition:none}.dream-stop.dwelling:after{animation:none}}
+
+/* Keep the supplied portraits intact while the moving boundary shifts emphasis. */
+.dream-layer-first,.dream-layer-second{clip-path:none;background:none}
+.dream-layer-first:before,.dream-layer-second:before{content:"";position:absolute;inset:0}
+.dream-layer-first:before{background:linear-gradient(90deg,#b77a183b,transparent);clip-path:inset(0 calc(100% - var(--dream-split)) 0 0)}
+.dream-layer-second:before{background:linear-gradient(270deg,#294e4933,transparent);clip-path:inset(0 0 0 var(--dream-split))}
+.dream-grain,.dream-player{transition:opacity .35s}
+.dream-focus-first .dream-player,.dream-focus-second .dream-grain{opacity:.28}
+.dream-handle span{white-space:nowrap;letter-spacing:0;font-size:24px;display:block}
+.dream-merged .dream-readings{opacity:0;visibility:hidden;transition:opacity .8s,visibility .8s}
