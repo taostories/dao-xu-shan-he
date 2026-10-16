@@ -48,7 +48,14 @@
     return node?.type==='walk'?{...m,key:index+':'+node.text,who:'',text:node.text}:m;
   }).filter((m,i,all)=>all.findIndex(other=>other.key===m.key)===i);
   const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const artSrc = id => temporaryArt.get(id) || `assets/${art.find(a=>a.id===id).file}`;
+  const sceneFor = node => ['dream','ending'].includes(node.type)?'epilogue':node.scene||chapters[node.chapter].scene;
+  const artSrc = id => {
+    if(temporaryArt.has(id))return temporaryArt.get(id);
+    const asset=art.find(a=>a.id===id);
+    const file=asset.type==='scene'?asset.file.replace('.webp',matchMedia('(max-width: 800px)').matches?'-mobile.webp':'-fast.webp'):asset.file;
+    return 'assets/'+file;
+  };
+  const upcomingArt = node => node.chapter===0?['bundle','tray','grain','chaff','scale']:node.chapter===1?['research']:node.chapter===2?['rice-normal','rice-special']:['epilogue','night'];
   const img = (id, cls='', alt='') => `<img class="${cls}" data-art="${id}" src="${esc(artSrc(id))}" alt="${esc(alt)}" decoding="async"${cls==='scene-image'?' fetchpriority="high"':''}>`;
   const warmedImages = new Map();
   let warmRevision = 0;
@@ -71,8 +78,18 @@
   }
   function wireImages(root=document) {
     root.querySelectorAll('img[data-art]').forEach(el => {
+      const scene=el.classList.contains('scene-image')?el.parentElement:null;
+      const asset=art.find(a=>a.id===el.dataset.art);
+      const preview=!temporaryArt.has(asset?.id)&&window.RICE_IMAGE_PREVIEWS?.[asset?.file.replace('.webp','')];
+      if(scene&&preview){
+        const shade=scene.classList.contains('ending')?'linear-gradient(#2e42398c,#2e42398c),':'';
+        scene.style.backgroundImage=shade+'url("'+preview+'")';
+        scene.style.backgroundSize='cover';
+        scene.style.backgroundPosition=asset.id==='old'&&matchMedia('(max-width: 800px)').matches?'30% center':'center';
+      }
       const success = () => {
         el.hidden = false;
+        if(scene)scene.style.backgroundImage='';
         const placeholder = el.parentElement.querySelector(':scope > .placeholder-label, :scope > .stage-placeholder, :scope > .art-empty');
         if (placeholder && el.className !== 'character') placeholder.classList.add('hidden');
         if (el.parentElement.classList.contains('rice-tile')) el.parentElement.classList.add('has-art');
@@ -109,7 +126,7 @@
     document.querySelector('#restart-cover')?.addEventListener('click',restartPrompt);
     wireImages(app);
     const resume=nodes[state.finished?0:state.index];
-    prepareNextImages([resume.scene||chapters[resume.chapter].scene,...(resume.chapter===2?['rice-normal','rice-special']:[]),'grandpa','player']);
+    prepareNextImages([sceneFor(resume),...(resume.type==='dream'?[]:['grandpa','player']),...upcomingArt(resume)]);
   }
   function currentText(node) {
     if(node.dynamic==='harvest-reflection')return state.results.harvest?.lost>0?'刚才我只想着把杂屑扬干净，手一重，连谷子也扬出去了。以前说“别浪费粮食”，到了自己手上，才知道留下它也得有耐心。':'这一把谷子就得这么仔细，才能稳稳留下来。我以前只看见碗里的饭，还真没想过，前面有这么多道工夫。';
@@ -124,7 +141,7 @@
     state.unlocked=Math.max(state.unlocked,node.chapter);
     document.body.classList.toggle('large-text',state.largeText);
     if(node.type==='ending') {renderEnding();return;}
-    const scene=node.scene||c.scene;
+    const scene=sceneFor(node);
     const night=scene==='night'||scene==='epilogue';
     let text=currentText(node), who=node.who, action='点击继续';
     if(node.type==='walk'){action=node.label;}
@@ -140,8 +157,8 @@
     app.innerHTML=`<section class="story-shell ${night?'night':''} ${node.panorama?'panorama':''}">${img(scene,'scene-image','')}<div class="scene-shade"></div><div class="stage">${portrait?img(portrait,'character character-'+portrait,who):''}</div><section class="dialogue ${node.type==='walk'?'scene-caption':''}" aria-label="${node.type==='walk'?'场景描写':'剧情对白'}">${who?`<div class="speaker">${who}</div>`:''}<div class="dialogue-main"><p class="dialogue-text" aria-live="polite">${esc(text)}</p><div class="dialogue-foot">${action?`<button class="next-button" id="next-button">${action}<span aria-hidden="true">→</span></button>`:''}</div></div></section><div class="chapter-progress" role="progressbar" aria-label="本章进度" aria-valuenow="${position}" aria-valuemin="0" aria-valuemax="${within.length}"><span style="width:${position/within.length*100}%"></span></div></section>`;
     document.querySelector('#next-button')?.addEventListener('click',advance);
     wireImages(app);
-    const nextScene=nodes.slice(state.index+1).map(n=>n.scene||chapters[n.chapter].scene).find(id=>id!==scene);
-    prepareNextImages([...(nodes[state.index+1]?.type==='dream'?['epilogue']:[]),...(node.chapter===2?['rice-normal','rice-special']:[]),!night?(portrait==='player'?'grandpa':'player'):null,nextScene,...(nextScene==='research'?['rice-normal','rice-special']:[])]);
+    const nextScene=nodes.slice(state.index+1).map(sceneFor).find(id=>id!==scene);
+    prepareNextImages([...(node.chapter===3?['epilogue']:[]),!night?(portrait==='player'?'grandpa':'player'):null,...upcomingArt(node),nextScene]);
   }
   let closingTransition=false;
   async function advance() {
