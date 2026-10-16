@@ -78,18 +78,8 @@
   }
   function wireImages(root=document) {
     root.querySelectorAll('img[data-art]').forEach(el => {
-      const scene=el.classList.contains('scene-image')?el.parentElement:null;
-      const asset=art.find(a=>a.id===el.dataset.art);
-      const preview=!temporaryArt.has(asset?.id)&&window.RICE_IMAGE_PREVIEWS?.[asset?.file.replace('.webp','')];
-      if(scene&&preview){
-        const shade=scene.classList.contains('ending')?'linear-gradient(#2e42398c,#2e42398c),':'';
-        scene.style.backgroundImage=shade+'url("'+preview+'")';
-        scene.style.backgroundSize='cover';
-        scene.style.backgroundPosition=asset.id==='old'&&matchMedia('(max-width: 800px)').matches?'30% center':'center';
-      }
       const success = () => {
         el.hidden = false;
-        if(scene)scene.style.backgroundImage='';
         const placeholder = el.parentElement.querySelector(':scope > .placeholder-label, :scope > .stage-placeholder, :scope > .art-empty');
         if (placeholder && el.className !== 'character') placeholder.classList.add('hidden');
         if (el.parentElement.classList.contains('rice-tile')) el.parentElement.classList.add('has-art');
