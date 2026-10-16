@@ -141,7 +141,7 @@
     document.querySelector('#next-button')?.addEventListener('click',advance);
     wireImages(app);
     const nextScene=nodes.slice(state.index+1).map(n=>n.scene||chapters[n.chapter].scene).find(id=>id!==scene);
-    prepareNextImages([...(node.chapter===2?['rice-normal','rice-special']:[]),!night?(portrait==='player'?'grandpa':'player'):null,nextScene,...(nextScene==='research'?['rice-normal','rice-special']:[])]);
+    prepareNextImages([...(nodes[state.index+1]?.type==='dream'?['epilogue']:[]),...(node.chapter===2?['rice-normal','rice-special']:[]),!night?(portrait==='player'?'grandpa':'player'):null,nextScene,...(nextScene==='research'?['rice-normal','rice-special']:[])]);
   }
   let closingTransition=false;
   async function advance() {

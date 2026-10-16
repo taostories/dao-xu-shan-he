@@ -18,10 +18,10 @@
     const stopDwell=()=>{clearTimeout(timer);timer=null;pending=null;root.querySelectorAll('.dwelling').forEach(el=>el.classList.remove('dwelling'));};
     const found=id=>progress.found.includes(id);
     root.innerHTML=`<section class="dream-experience ${progress.merged?'dream-merged':''}" aria-label="探索禾下乘凉梦的两层含义">
-      ${img('dusk','scene-image','想象中的禾下乘凉梦')}
+      ${img('epilogue','scene-image','想象中，星河稻浪连接前人的耕耘与青年的脚步')}
       <div class="dream-surface">
-        <div class="dream-layer dream-layer-first">${img('grain','dream-grain','')}</div>
-        <div class="dream-layer dream-layer-second">${img('player','dream-player','')}</div>
+        <div class="dream-layer dream-layer-first"></div>
+        <div class="dream-layer dream-layer-second"></div>
         <div class="dream-readings">${[0,1].map(side=>`<section class="dream-reading"><h2>${side===0?'第一层梦<span>愿人人吃饱</span>':'第二层梦<span>愿后人接续</span>'}</h2><ul>${points.slice(side*3,side*3+3).map(p=>`<li><button data-dream-memory="${p.id}" ${found(p.id)?'':'disabled'}>${found(p.id)?p.label:'待探寻'}</button></li>`).join('')}</ul></section>`).join('')}</div>
         <div class="dream-controls">
           <div class="dream-track" aria-hidden="true">${points.map(p=>`<span class="dream-stop ${found(p.id)?'found':''}" data-stop="${p.id}" style="left:${p.at}%"></span>`).join('')}</div>
